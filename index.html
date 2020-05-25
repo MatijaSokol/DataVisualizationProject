@@ -21,21 +21,61 @@
 
         const projection = d3.geoNaturalEarth1();
         const pathGenerator = d3.geo.path().projection(projection);
+       
+        const g = svg.append('g')
 
-        svg.append('path')
+        g.append('path')
             .attr('class', 'sphere')
             .attr('d', pathGenerator({type: "Sphere"}));
-
-        d3.json("world.json", function(error, data) {
-            const countries = topojson.feature(data, data.objects.countries);	
-
-            svg.selectAll('path')
-                .data(countries.features)
-                .enter()
-                .append('path')
-                .attr('class', 'country')
-                .attr('d', pathGenerator);
                 
+        g.call(d3.behavior.zoom().on('zoom', () => {
+            g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        }));
+
+        //const colorScale = d3.scale.category20c();
+        
+        const colors = ["#2e61b8", "#2eb8a6", "#2eb84a", "#8ab82e", "#b8b32e", "#b8712e", "#b8452e"];
+        const colorValue = d => d.properties.economy;
+
+
+        d3.json("topoJSONdata.json", function(error, topoJSONdata) {
+            d3.tsv("tsvData.tsv", function(error, tsvData) {
+                const countries = topojson.feature(topoJSONdata, topoJSONdata.objects.countries);	
+
+                /*colorScale
+                    .domain(countries.features.map(colorValue))
+                    .domain(colorScale.domain().sort());*/
+
+                const rowById = {};
+                tsvData.forEach(d => {
+                    rowById[d.iso_n3] = d;
+                });
+
+                countries.features.forEach(d => {
+                    Object.assign(d.properties, rowById[d.id])
+                });
+
+                //console.log(Object.keys(countryName).length);
+
+                //console.log(countryName);
+
+                /*Object.keys(countryName).forEach(d => {
+                    console.log(d);
+                });*/
+
+                g.selectAll('path')
+                    .data(countries.features)
+                    .enter()
+                    .append('path')
+                    .attr('class', 'country')
+                    .attr('d', pathGenerator)
+                    .attr('fill', d => colors[String(colorValue(d)).substring(0, 1) - 1])
+                    .on('click', function(d) {
+                        console.log(rowById[d.id].name);
+                    })
+                    .append('title')
+                    .text(d => rowById[d.id].name);
+            });    
         });
     </script>
 
