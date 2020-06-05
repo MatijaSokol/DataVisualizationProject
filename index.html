@@ -65,7 +65,10 @@
                     .attr('class', 'country')
                     .attr('d', pathGenerator)
                     .attr('fill', d => colors[String(colorValue(d)).substring(0, 1) - 1])
-                    .on('click', d => console.log(rowById[d.id].name))
+                    .on('click', d => {
+                        console.log(rowById[d.id].name);
+                        makeGraph(rowById[d.id].fifteen, rowById[d.id].sixteen, rowById[d.id].seventeen, rowById[d.id].eighteen);
+                    })
                     .append('title')
                     .text(d => rowById[d.id].name)
             });    
@@ -102,6 +105,33 @@
                 .attr("dy", ".25em")
                 .attr('font-family', 'sans-serif')
                 .text(d => legendValues[i]);
+        }
+
+        function makeGraph(fifteen, sixteen, seventeen, eighteen) {
+            first = getParsedData(fifteen);
+            second = getParsedData(sixteen);
+            third = getParsedData(seventeen);
+            fourth = getParsedData(eighteen);
+
+            if (first == 0 || second == 0 || third == 0 || fourth == 0) {
+                console.log("no data");
+                return;
+            }
+
+            
+            console.log(first);
+            console.log(second);
+            console.log(third);
+            console.log(fourth);
+        }
+
+        function getParsedData(data) {
+            if (!data.toString().includes(",")) {
+                return 0;
+            }
+            const commmaIndex = data.toString().indexOf(",");
+            const value = data.toString().substring(0, commmaIndex);
+            return parseInt(parseInt(value) / 1000000000);
         }
     </script>
 
