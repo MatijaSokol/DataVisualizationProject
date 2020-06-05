@@ -13,7 +13,7 @@
     
     <script>
         var width = innerWidth;
-        var height = innerHeight;
+        var height = 1.8 * innerHeight;
 
         const colors = ["#2e61b8", "#2eb8a6", "#eaed87", "#8ab82e", "#b8b32e", "#b8712e", "#b8452e"];
         const colorValue = d => d.properties.economy;
@@ -24,7 +24,7 @@
 
         const projection = d3.geoNaturalEarth1()
             .scale(230)
-            .translate([width / 2, height / 2]);
+            .translate([width / 2, height / 3.8]);
         const pathGenerator = d3.geo.path().projection(projection);
        
         const g = svg.append('g');
@@ -118,6 +118,62 @@
                 return;
             }
 
+            var margin = {top: 20, bottom: 70, left:40, right: 20};
+            var width = 500 - margin.left - margin.right;
+            var height = 500 - margin.top - margin.bottom;
+
+            const title = "title";
+            const xValue = "time";
+            const yValue = "money";
+            
+            const dataX = ["2015", "2016", "2017", "2018"];
+            const dataY = [first, second, third, fourth];
+
+            var x = d3.scale.ordinal()
+                .domain(d3.range(dataX.length))
+                .rangePoints([0, width]);
+
+            var y = d3.scale.linear()
+                .domain([0, d3.max(dataY)])
+                .range([height, 0]);
+
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom")
+                .tickFormat((d, i) => i + 1);
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left")
+                .ticks(10)
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(" + 1.25 * width + "," + 2.8 * height + ")")
+                .call(xAxis)
+                .selectAll("text")
+                .style("text-anchor", "middle");
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .attr("transform", "translate(" + 1.25 * width + "," + 1.8 *  height + ")")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Vrijednost");
+
+            var valueline = d3.svg.line()
+                .x(function(d, i) { return x(i); })
+                .y(function(d) { return y(d); });
+
+            var linechart = svg.append("path")
+                .attr("class", "line")
+                .attr("d", valueline(dataY))
+                .attr("fill", "none")
+                .style("stroke", "blue");
             
             console.log(first);
             console.log(second);
