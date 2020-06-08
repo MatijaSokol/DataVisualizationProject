@@ -7,6 +7,7 @@
     <script src="https://d3js.org/d3-geo.v1.min.js"></script>
     <script src="http://d3js.org/topojson.v1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3-ease.v1.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
@@ -137,8 +138,8 @@
             var height = 500 - margin.top - margin.bottom;
 
             const title = country + " money from 2015 to 2018";
-            const xValue = "Time";
-            const yValue = "Value";
+            const xValue = "Time [years]";
+            const yValue = "Value [billions]";
             
             const dataX = ["2015", "2016", "2017", "2018"];
             const dataY = [first, second, third, fourth];
@@ -163,25 +164,30 @@
                 .ticks(10)
 
             graph.append("g")
-                .attr("class", "x axis")
+                .attr("class", "red")
                 .attr("transform", "translate(" + 1.25 * width + "," + 2.8 * height + ")")
                 .call(xAxis)
                 .append("text")
                 .attr("x", (width / 2))
                 .attr("y", 50)
                 .attr("dy", ".100em")
+                .attr("font-weight", "bold")
                 .style("text-anchor", "middle")
+                .style("fill", "red")
                 .text(xValue);
 
             graph.append("g")
-                .attr("class", "y axis")
+                .attr("class", "red")
                 .attr("transform", "translate(" + 1.25 * width + "," + 1.8 *  height + ")")
                 .call(yAxis)
                 .append("text")
                 .attr("transform", "rotate(-90)")
+                .attr("x", - (width / 2) + 10)
                 .attr("y", -70)
-                .attr("dy", ".71em")
-                .style("text-anchor", "end")
+                .attr("dy", ".50em")
+                .attr("font-weight", "bold")
+                .style("text-anchor", "middle")
+                .style("fill", "red")
                 .text(yValue);
 
             var valueline = d3.svg.line()
@@ -189,20 +195,21 @@
                 .x(function(d, i) { return x(i); })
                 .y(function(d) { return y(d); });
 
-            linechart = svg.append("path")
+            linechart = graph.append("path")
                 .attr("class", "line")
                 .attr("transform", "translate(" + 1.25 * width + "," + 1.8 *  height + ")")
                 .attr("d", valueline(dataY))
                 .attr("fill", "none")
-                .style("stroke", "blue");
-
-                console.log(width);
+                .style("stroke", "red")
+                .style("stroke-width", "5px");
 
             graph.append("text")
                 .attr("x", width / 2)
                 .attr("y", -25)
                 .attr("transform", "translate(" + 1.25 * width + "," + 1.8 *  height + ")")
                 .attr("text-anchor", "middle")
+                .attr("font-weight", "bold")
+                .style("fill", "red")
                 .style("font-size", "1.5em")
                 .text(title);
 
