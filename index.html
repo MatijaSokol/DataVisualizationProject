@@ -191,7 +191,7 @@
                 .text(yValue);
 
             var valueline = d3.svg.line()
-                .interpolate("basis")
+                .interpolate("monotone")
                 .x(function(d, i) { return x(i); })
                 .y(function(d) { return y(d); });
 
@@ -202,6 +202,16 @@
                 .attr("fill", "none")
                 .style("stroke", "red")
                 .style("stroke-width", "5px");
+
+            const pathLength = linechart.node().getTotalLength();
+
+            linechart
+                .attr("stroke-dashoffset", pathLength)
+                .attr("stroke-dasharray", pathLength)
+                .transition()
+                .delay(100)
+                .duration(2000)
+                .attr("stroke-dashoffset", 0);
 
             graph.append("text")
                 .attr("x", width / 2)
