@@ -54,14 +54,6 @@
                     Object.assign(d.properties, rowById[d.id])
                 });
 
-                //console.log(Object.keys(countryName).length);
-
-                //console.log(countryName);
-
-                /*Object.keys(countryName).forEach(d => {
-                    console.log(d);
-                });*/
-
                 g.selectAll('path')
                     .data(countries.features)
                     .enter()
@@ -72,7 +64,18 @@
                     .on('click', d => {
                         if (d3.event.defaultPrevented) return;
                         console.log(rowById[d.id].name);
-                        makeGraph(rowById[d.id].name, rowById[d.id].fifteen, rowById[d.id].sixteen, rowById[d.id].seventeen, rowById[d.id].eighteen);
+                        data = {
+                            country: rowById[d.id].name,
+                            eleven: rowById[d.id].eleven,
+                            twelwe: rowById[d.id].twelwe,
+                            thirteen: rowById[d.id].thirteen,
+                            fourteen: rowById[d.id].fourteen,
+                            fifteen: rowById[d.id].fifteen,
+                            sixteen: rowById[d.id].sixteen,
+                            seventeen: rowById[d.id].seventeen,
+                            eighteen: rowById[d.id].eighteen,
+                        }
+                        makeGraph(data);
                     })
                     .append('title')
                     .text(d => rowById[d.id].name)
@@ -114,16 +117,21 @@
 
         let graph = svg.append('g');
 
-        function makeGraph(country, fifteen, sixteen, seventeen, eighteen) {
-            first = getParsedData(fifteen);
-            second = getParsedData(sixteen);
-            third = getParsedData(seventeen);
-            fourth = getParsedData(eighteen);
+        function makeGraph(data) {
+            first = getParsedData(data.eleven);
 
-            if (first == 0 || second == 0 || third == 0 || fourth == 0) {
+            if (first == 0) {
                 console.log("no data");
                 return;
             }
+
+            second = getParsedData(data.twelwe);
+            third = getParsedData(data.thirteen);
+            fourth = getParsedData(data.fourteen);
+            fifth = getParsedData(data.fifteen);
+            sixth = getParsedData(data.sixteen);
+            seventh = getParsedData(data.seventeen);
+            eighth = getParsedData(data.eighteen);
 
             if (graphMade) {
                 graph.remove();
@@ -134,15 +142,15 @@
             window.scrollTo(0, document.body.scrollHeight);
 
             var margin = {top: 20, bottom: 70, left:40, right: 20};
-            var width = 500 - margin.left - margin.right;
+            var width = 750 - margin.left - margin.right;
             var height = 500 - margin.top - margin.bottom;
 
-            const title = country + " money from 2015 to 2018";
+            const title = data.country + " money from 2011 to 2018";
             const xValue = "Time [years]";
             const yValue = "Value [billions]";
             
-            const dataX = ["2015", "2016", "2017", "2018"];
-            const dataY = [first, second, third, fourth];
+            const dataX = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018"];
+            const dataY = [first, second, third, fourth, fifth, sixth, seventh, eighth];
 
             
             var x = d3.scale.ordinal()
@@ -164,8 +172,8 @@
                 .ticks(10)
 
             graph.append("g")
-                .attr("class", "red")
-                .attr("transform", "translate(" + 1.25 * width + "," + 2.8 * height + ")")
+                .attr("class", "white")
+                .attr("transform", "translate(" + 0.75 * width + "," + 2.8 * height + ")")
                 .call(xAxis)
                 .append("text")
                 .attr("x", (width / 2))
@@ -173,34 +181,34 @@
                 .attr("dy", ".100em")
                 .attr("font-weight", "bold")
                 .style("text-anchor", "middle")
-                .style("fill", "red")
+                .style("fill", "white")
                 .text(xValue);
 
             graph.append("g")
-                .attr("class", "red")
-                .attr("transform", "translate(" + 1.25 * width + "," + 1.8 *  height + ")")
+                .attr("class", "white")
+                .attr("transform", "translate(" + 0.75 * width + "," + 1.8 *  height + ")")
                 .call(yAxis)
                 .append("text")
                 .attr("transform", "rotate(-90)")
-                .attr("x", - (width / 2) + 10)
+                .attr("x", - (0.75 * width / 2) + 50)
                 .attr("y", -70)
                 .attr("dy", ".50em")
                 .attr("font-weight", "bold")
                 .style("text-anchor", "middle")
-                .style("fill", "red")
+                .style("fill", "white")
                 .text(yValue);
 
             var valueline = d3.svg.line()
-                .interpolate("monotone")
+                .interpolate("basis")
                 .x(function(d, i) { return x(i); })
                 .y(function(d) { return y(d); });
 
             linechart = graph.append("path")
                 .attr("class", "line")
-                .attr("transform", "translate(" + 1.25 * width + "," + 1.8 *  height + ")")
+                .attr("transform", "translate(" + 0.75 * width + "," + 1.8 *  height + ")")
                 .attr("d", valueline(dataY))
                 .attr("fill", "none")
-                .style("stroke", "red")
+                .style("stroke", "white")
                 .style("stroke-width", "5px");
 
             const pathLength = linechart.node().getTotalLength();
@@ -216,10 +224,10 @@
             graph.append("text")
                 .attr("x", width / 2)
                 .attr("y", -25)
-                .attr("transform", "translate(" + 1.25 * width + "," + 1.8 *  height + ")")
+                .attr("transform", "translate(" + 0.75 * width + "," + 1.8 *  height + ")")
                 .attr("text-anchor", "middle")
                 .attr("font-weight", "bold")
-                .style("fill", "red")
+                .style("fill", "white")
                 .style("font-size", "1.5em")
                 .text(title);
 
@@ -229,6 +237,10 @@
             console.log(second);
             console.log(third);
             console.log(fourth);
+            console.log(fifth);
+            console.log(sixth);
+            console.log(seventh);
+            console.log(eighth);
         }
 
         function getParsedData(data) {
