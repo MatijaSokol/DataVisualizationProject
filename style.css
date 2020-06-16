@@ -22,3 +22,15 @@ html {
 .white {
     fill: white;
 }
+
+#mapContainer {
+    display: block;
+    margin: auto;
+}
+
+svg{
+    display: block;
+    margin: auto;
+    width: 90%;
+    justify-content: center;
+}
