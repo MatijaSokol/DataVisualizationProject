@@ -15,7 +15,7 @@
     
     <script>
         var width = innerWidth;
-        var height = 1.75 * innerHeight;
+        var height = innerHeight;
         var graphMade = false;
 
         const colors = ["#2e61b8", "#2eb8a6", "#eaed87", "#8ab82e", "#b8b32e", "#b8712e", "#b8452e"];
@@ -27,7 +27,7 @@
 
         const projection = d3.geoNaturalEarth1()
             .scale(230)
-            .translate([width / 2, height / 3.8]);
+            .translate([width / 2, height / 2.15]);
         const pathGenerator = d3.geo.path().projection(projection);
        
         const g = svg.append('g');
@@ -37,7 +37,8 @@
             .attr('class', 'sphere')
             .attr('d', pathGenerator({type: "Sphere"}));
                 
-        svg.call(d3.behavior.zoom().on('zoom', () => {
+        svg.call(d3.behavior.zoom().on('zoom', (e) => {
+            event.preventDefault();
             g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
         }));
 
@@ -115,7 +116,12 @@
                 .text(d => legendValues[i]);
         }
 
-        let graph = svg.append('g');
+        
+        let graphSvg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height * 0.75);
+        let graph = graphSvg.append('g');
+
 
         function makeGraph(data) {
             first = getParsedData(data.eleven);
@@ -136,7 +142,7 @@
             if (graphMade) {
                 graph.remove();
                 linechart.remove();
-                graph = svg.append('g');
+                graph = graphSvg.append('g');
             }
             
             window.scrollTo(0, document.body.scrollHeight);
@@ -173,7 +179,7 @@
 
             graph.append("g")
                 .attr("class", "white")
-                .attr("transform", "translate(" + 0.75 * width + "," + 2.8 * height + ")")
+                .attr("transform", "translate(" + 0.75 * width + "," + height * 1.14 + ")")
                 .call(xAxis)
                 .append("text")
                 .attr("x", (width / 2))
@@ -186,7 +192,7 @@
 
             graph.append("g")
                 .attr("class", "white")
-                .attr("transform", "translate(" + 0.75 * width + "," + 1.8 *  height + ")")
+                .attr("transform", "translate(" + 0.75 * width + "," + height / 7 + ")")
                 .call(yAxis)
                 .append("text")
                 .attr("transform", "rotate(-90)")
@@ -205,7 +211,7 @@
 
             linechart = graph.append("path")
                 .attr("class", "line")
-                .attr("transform", "translate(" + 0.75 * width + "," + 1.8 *  height + ")")
+                .attr("transform", "translate(" + 0.75 * width + "," + height / 7 + ")")
                 .attr("d", valueline(dataY))
                 .attr("fill", "none")
                 .style("stroke", "white")
@@ -224,7 +230,7 @@
             graph.append("text")
                 .attr("x", width / 2)
                 .attr("y", -25)
-                .attr("transform", "translate(" + 0.75 * width + "," + 1.8 *  height + ")")
+                .attr("transform", "translate(" + 0.75 * width + "," + height / 7 + ")")
                 .attr("text-anchor", "middle")
                 .attr("font-weight", "bold")
                 .style("fill", "white")
