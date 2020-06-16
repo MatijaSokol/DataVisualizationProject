@@ -12,16 +12,17 @@
     <title>Document</title>
 </head>
 <body>
+    <div id="chart"></div>
     
     <script>
-        var width = innerWidth;
-        var height = innerHeight;
-        var graphMade = false;
+        const width = innerWidth;
+        const height = innerHeight;
+        let graphMade = false;
 
         const colors = ["#2e61b8", "#2eb8a6", "#eaed87", "#8ab82e", "#b8b32e", "#b8712e", "#b8452e"];
         const colorValue = d => d.properties.economy;
 
-        var svg = d3.select("body").append("svg")
+        const svg = d3.select("body").append("svg")
             .attr("width", width)
             .attr("height", height);
 
@@ -30,16 +31,19 @@
             .translate([width / 2, height / 2.15]);
         const pathGenerator = d3.geo.path().projection(projection);
        
-        const g = svg.append('g');
+        const g = svg.append('g')
+            .attr("id", "map");
         let linechart;
 
         g.append('path')
             .attr('class', 'sphere')
             .attr('d', pathGenerator({type: "Sphere"}));
+
+        const zoomLevelLimit = [1, 5];
+        const zoom = d3.behavior.zoom().scaleExtent(zoomLevelLimit)
                 
-        svg.call(d3.behavior.zoom().on('zoom', (e) => {
-            event.preventDefault();
-            g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        svg.call(zoom.on('zoom', () => {
+            g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");       
         }));
 
         d3.json("topoJSONdata.json", function(error, topoJSONdata) {
@@ -117,7 +121,7 @@
         }
 
         
-        let graphSvg = d3.select("body").append("svg")
+        const graphSvg = d3.select("body").append("svg")
             .attr("width", width)
             .attr("height", height * 0.75);
         let graph = graphSvg.append('g');
@@ -159,20 +163,20 @@
             const dataY = [first, second, third, fourth, fifth, sixth, seventh, eighth];
 
             
-            var x = d3.scale.ordinal()
+            const x = d3.scale.ordinal()
                 .domain(d3.range(dataX.length))
                 .rangePoints([0, width]);
 
-            var y = d3.scale.linear()
+            const y = d3.scale.linear()
                 .domain([0, d3.max(dataY)])
                 .range([height, 0]);
 
-            var xAxis = d3.svg.axis()
+            const xAxis = d3.svg.axis()
                 .scale(x)
                 .orient("bottom")
                 .tickFormat((d, i) => dataX[i]);
 
-            var yAxis = d3.svg.axis()
+            const yAxis = d3.svg.axis()
                 .scale(y)
                 .orient("left")
                 .ticks(10)
@@ -204,7 +208,7 @@
                 .style("fill", "white")
                 .text(yValue);
 
-            var valueline = d3.svg.line()
+            const valueline = d3.svg.line()
                 .interpolate("basis")
                 .x(function(d, i) { return x(i); })
                 .y(function(d) { return y(d); });
