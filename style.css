@@ -4,7 +4,7 @@ body {
 
 html {
     scroll-behavior: smooth;
-  }
+}
 
 .sphere {
     fill: blue;
@@ -20,7 +20,7 @@ html {
 }
 
 .white {
-    fill: white;
+    fill: #fff;
 }
 
 #mapContainer {
@@ -28,7 +28,7 @@ html {
     margin: auto;
 }
 
-svg{
+svg {
     display: block;
     margin: auto;
     width: 90%;

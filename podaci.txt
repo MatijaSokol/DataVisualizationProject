@@ -1,1 +1,0 @@
-https://data.worldbank.org/indicator/NY.GDP.MKTP.CD?most_recent_year_desc=true
