@@ -326,6 +326,7 @@
 
             const pathLength = linechart.node().getTotalLength();
 
+            //stackoverflow
             linechart
                 .attr("stroke-dashoffset", pathLength)
                 .attr("stroke-dasharray", pathLength)
@@ -426,6 +427,7 @@
                     barchartValueLabel.text(barchartValue);
                 })
 
+            //bl.ocks.org
             graphSvg.selectAll(".bar")
                 .transition()
                 .delay(100)
