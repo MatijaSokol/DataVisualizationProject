@@ -44,6 +44,7 @@
             .attr('class', 'sphere')
             .attr('d', pathGenerator({type: "Sphere"}));
 
+        //zoom properties
         const zoomLevelLimit = [1, 5];
         const zoom = d3.behavior.zoom().scaleExtent(zoomLevelLimit)
 
@@ -57,6 +58,7 @@
             d3.tsv("tsvData.tsv", function(error, tsvData) {
                 const countries = topojson.feature(topoJSONdata, topoJSONdata.objects.countries);
 
+                //row from file
                 const rowById = {};
                 tsvData.forEach(d => {
                     rowById[d.iso_n3] = d;
@@ -71,6 +73,7 @@
                     countryNames.push(item.properties.name);
                 });
 
+                //putting countries in select element
                 countryNames.sort();
                 const dropDown = d3.select("#countries");
                 dropDown.selectAll(null)
@@ -114,6 +117,7 @@
                     .attr('d', pathGenerator)
                     .attr('fill', d => colors[String(colorValue(d)).substring(0, 1) - 1])
                     .on('click', d => {
+                        //disable click when dragging over map
                         if (d3.event.defaultPrevented) return;
                         const data = {
                             country: rowById[d.id].name,
@@ -221,9 +225,9 @@
             
             window.scrollTo(0, document.body.scrollHeight);
 
-            const  margin = {top: 20, bottom: 70, left: 40, right: 20};
-            const  width = 750 - margin.left - margin.right;
-            const  height = 500 - margin.top - margin.bottom;
+            const margin = {top: 20, bottom: 70, left: 40, right: 20};
+            const width = 750 - margin.left - margin.right;
+            const height = 500 - margin.top - margin.bottom;
 
             const title = data.country + " nominal GDP from 2011 to 2018 in US dollars";
             const xAxisLinechartTitle = "Time [years]";
@@ -438,6 +442,7 @@
             graphMade = true;
         }
 
+        //delete decimal part
         function parseData(data) {
             if (!data.toString().includes(",")) {
                 return 0;
