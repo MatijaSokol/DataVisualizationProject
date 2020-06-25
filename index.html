@@ -6,8 +6,6 @@
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="https://d3js.org/d3-geo.v1.min.js"></script>
     <script src="http://d3js.org/topojson.v1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="https://d3js.org/d3-ease.v1.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>Document</title>
@@ -34,6 +32,7 @@
             .attr("width", width)
             .attr("height", height * 0.95);
 
+        //map shape
         const projection = d3.geoNaturalEarth1()
             .scale(230)
             .translate([width / 2.25, height / 2.15]);
@@ -52,7 +51,9 @@
             mapGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
         }));
 
+        //loading data for map
         d3.json("topoJSONdata.json", function(error, topoJSONdata) {
+            //loading other data for each country
             d3.tsv("tsvData.tsv", function(error, tsvData) {
                 const countries = topojson.feature(topoJSONdata, topoJSONdata.objects.countries);
 
@@ -140,6 +141,7 @@
             });    
         });
 
+        //for displaying big numbers
         function numberWithSpaces(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         }
@@ -195,6 +197,7 @@
         function makeGraphs(data) {
             const first = parseData(data.eleven);
 
+            //if there is no data for that country
             if (first === 0) {
                 alert("No data for this country");
                 return;
@@ -415,9 +418,7 @@
                 .attr("width", barWidth)
                 .attr("height", function () { return heightBarchart - yBarchart(0); })
                 .attr("y", function () { return yBarchart(0); })
-                .attr("fill", function (d, i) {
-                    return barchartColors[i];
-                })
+                .attr("fill", function (d, i) { return barchartColors[i]; })
                 .on("mouseover", function() { barchartValueLabel.attr("opacity", "1"); } )
                 .on("mouseout", function() { barchartValueLabel.attr("opacity", "0"); })
                 .on("mousemove", function() {
